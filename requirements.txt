@@ -1,0 +1,5 @@
+flask
+requests
+transformers
+flask-cors
+Flask-RESTful
