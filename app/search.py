@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 meal_times = {
     "early morning": "6:30",
     "breakfast": "8:30",
-    "mid-meal": "11:00",
+    "mid meal": "11:00",
     "lunch": "13:30",
     "dinner": "20:00",
     "post dinner": "21:30"
