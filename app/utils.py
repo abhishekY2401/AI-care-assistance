@@ -3,6 +3,7 @@ import openai
 import google.generativeai as genai
 import os
 import logging
+import json
 
 
 def get_client(llm):
@@ -45,17 +46,15 @@ def generate_response(llm, message):
 
             logging.info("GPT API call successful")
 
-            return response.choices[0].text.strip()
+            response_text = response.choices[0].text.strip()
 
         elif llm.startswith("gemini"):
             logging.info("Invoking gemini LLM API")
 
-            response = client.generate_content(
-                message
-            )
+            response = client.generate_content(message)
 
-            logging.info("gemini API call successful")
-            return response.text.strip()
+            logging.info("Gemini API call successful")
+            response_text = response.text.strip()
 
         else:  # Cohere
             logging.info("Invoking cohere LLM API")
@@ -67,9 +66,21 @@ def generate_response(llm, message):
                 message=message,
             )
 
-            logging.info("cohere API call successful")
-            return chat_completion.text.strip()
+            logging.info("Cohere API call successful")
+            response_text = chat_completion.text.strip()
+
+        # Attempt to parse the LLM response as JSON
+        try:
+            response_json = json.loads(response_text)
+            return response_json
+        except json.JSONDecodeError as e:
+            logging.error(f"Error parsing LLM response as JSON: {e}")
+            # Return the raw response text and an error message in JSON format
+            return {
+                "error": "Invalid JSON format in LLM response",
+                "raw_response": response_text
+            }
 
     except Exception as e:
-        print(e)
+        logging.error(f"Exception in generate_response: {e}")
         return None
