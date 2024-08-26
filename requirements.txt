@@ -3,3 +3,7 @@ requests
 transformers
 flask-cors
 Flask-RESTful
+cohere
+openai
+google-generativeai
+python-dotenv
